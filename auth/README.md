@@ -34,6 +34,7 @@ purpose: Sign up for account
 method: POST
 body: {email:string, password:string}
 purpose: Sign in to an existing account
+validations: npm express-validator package
 
 ### /api/users/sigout
 
@@ -41,7 +42,7 @@ method: POST
 body: {}
 purpose: Sign out
 
-### /api/users/currentuser
+### /api/users/current-user
 
 method: GET
 body: -

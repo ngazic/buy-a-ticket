@@ -1,13 +1,27 @@
-import express, { Request, Response } from "express";
-import { json } from "body-parser";
+import express, { Request, Response } from 'express';
+import { json } from 'body-parser';
+import { currentUserRouter } from './routes/current-user';
+import { signinRouter } from './routes/signin';
+import { signupRouter } from './routes/signup';
+import { signoutRouter } from './routes/signout';
+import { errorHandlerMiddleware } from './middlewares/error-handler';
+import 'express-async-errors';
+import { NotFoundError } from './errors/not-found-error';
 
 const app = express();
-app.use(json());
 const port = 3000;
 
-app.get("/api/users/", (req: Request, res: Response) => {
-  res.send("<h1>Hello from Auth service</h1><div>This is awesome</div>");
+app.use(json());
+app.use(currentUserRouter);
+app.use(signinRouter);
+app.use(signupRouter);
+app.use(signoutRouter);
+
+app.use('*', (req: Request, res: Response) => {
+  throw new NotFoundError();
 });
+
+app.use(errorHandlerMiddleware);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!!`);

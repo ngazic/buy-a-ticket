@@ -40,7 +40,7 @@ We are creating a separate service to manage each type of resource:
 2. tickets (ticket creation/editing. Knows whether a ticket can be updated)
 3. orders (order creation/editing)
 4. expiration (watches for orders to be created, cancels them after 15 minutes)
-5. payments (handles credit card payments. Canclels orders if payments fails, completes if payment succeeds)
+5. payments (handles credit card payments. Cancels orders if payments fails, completes if payment succeeds)
 
 ## Events
 
@@ -55,12 +55,36 @@ We are creating a separate service to manage each type of resource:
 
 ## Common response Structure
 
-All error responses that we send out from any server should have this structure:
+1. All error responses that we send out from any server should have this structure:
+
+  ```
+  {
+    errors: {
+      message: string, field?:string
+    }[]
+  }
+  ```
+2. The response status should be accordingly to the error 
+   
+### The error model 
+
+We'll inherit this abstract class for all our custom errors:
 
 ```
-{
-  errors: {
-    message: string, field?:string
-  }[]
+abstract class CustomError extends Error {
+  abstract statusCode: number;
+
+  constructor(message: string) {
+    super(message);
+
+    Object.setPrototypeOf(this, CustomError.prototype);
+  }
+
+  abstract serializeErrors(): { message: string; field?: string }[];
 }
+
 ```
+
+### Handling async errors
+
+Use **express-async-errors** package
