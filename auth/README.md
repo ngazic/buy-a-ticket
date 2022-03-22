@@ -36,6 +36,15 @@ body: {email:string, password:string}
 purpose: Sign in to an existing account
 validations: npm express-validator package
 
+## description
+
+### Sign up 
+
+- Does the user with the email already exists? If yes, respond with error.
+- Hash the password the user entered. Can't store it in the DB in plain text.
+- Create new User and save to Mongo DB 
+- User is now considered to be logged in. Send them Cookie, JWT token...
+
 ### /api/users/sigout
 
 method: POST

@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
-import { RequestValidationError } from '../errors/request-valdation-error';
+import { RequestValidationError } from '../errors/request-validation-error';
+
 
 
 const router = express.Router();
@@ -12,13 +13,14 @@ router.post(
     body('password').isLength({ min: 5 }).withMessage('Password must have at least 5 chars')
   ],
   (req: Request, res: Response) => {
-    console.log('sing in router');
     let { email, password } = req.body;
     console.log(email, password);
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       throw new RequestValidationError(errors.array());
     }
+    
     res.status(200).send('You are signed in ');
   }
 );
