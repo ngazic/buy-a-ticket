@@ -20,6 +20,8 @@ Set your local routing to custom ticketing.dev (this is ingress requirement).
 Inside root directory, run:
 
 ```
+kubectl create secret generic jwt-secret --from-literal=JWT_KEY=somesecretpasswordinkubernetes # to create secret JWT token signature in Kubernetes
+kubectl get secrets # to check all the secrets
 skaffold dev
 ```
 
@@ -88,3 +90,15 @@ abstract class CustomError extends Error {
 ### Handling async errors
 
 Use **express-async-errors** package
+
+
+### Sharing all services common secrets inside [Kubernetes](https://kubernetes.io/docs/concepts/configuration/secret/#use-case-as-container-environment-variables)
+
+I.e. create jwt signing key:
+```
+kubectl create secret generic jwt-secret --from-literal=JWT_KEY=jwt_signature_value
+
+## checking the secrets
+kubectl get secrets
+```
+

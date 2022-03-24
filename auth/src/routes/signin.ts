@@ -1,6 +1,10 @@
 import express, { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
-import { RequestValidationError } from '../errors/request-validation-error';
+import { body } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { BadRequestError } from '../errors/bad-request-error';
+import { validateRequest as validateRequestMiddleware } from '../middlewares/validate-request';
+import { User } from '../models/user';
+import { Password } from '../services/password';
 
 
 
@@ -9,19 +13,48 @@ const router = express.Router();
 router.post(
   '/api/users/signin',
   [
-    body('email').isEmail().withMessage('Email must be valid'),
-    body('password').isLength({ min: 5 }).withMessage('Password must have at least 5 chars')
+    body('email')
+      .isEmail()
+      .withMessage('Email must be valid'),
+    body('password')
+      .trim().notEmpty()
+      .isLength({ min: 5 })
+      .withMessage('Password must have at least 5 chars')
   ],
-  (req: Request, res: Response) => {
-    let { email, password } = req.body;
-    console.log(email, password);
-    const errors = validationResult(req);
+  validateRequestMiddleware,
+  async (req: Request, res: Response) => {
 
-    if (!errors.isEmpty()) {
-      throw new RequestValidationError(errors.array());
+    const { email, password } = req.body;
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      throw new BadRequestError('Invalid credentials');
     }
-    
-    res.status(200).send('You are signed in ');
+
+    const passwordsMatch = await Password.compare(
+      existingUser.password,
+      password
+    );
+    if (!passwordsMatch) {
+      throw new BadRequestError('Invalid Credentials');
+    }
+
+    // Generate JWT
+    const userJwt = jwt.sign(
+      {
+        id: existingUser.id,
+        email: existingUser.email
+      },
+      process.env.JWT_KEY!
+    );
+
+    // Store it on session object
+    req.session = {
+      jwt: userJwt
+    };
+
+    res.status(200).send(existingUser);
+
   }
 );
 

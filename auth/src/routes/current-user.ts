@@ -1,9 +1,17 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+import { currentUserMiddleware } from '../middlewares/current-user';
 
 const router = express.Router();
 
-router.get('/api/users/current-user', (req: Request, res: Response) => {
-  res.send('Current user route');
-});
+router.get(
+  '/api/users/current-user',
+  currentUserMiddleware,
+  (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    res.send({ currentUser: req.currentUser || null });
+  });
 
 export { router as currentUserRouter };

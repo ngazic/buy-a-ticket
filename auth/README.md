@@ -36,14 +36,6 @@ body: {email:string, password:string}
 purpose: Sign in to an existing account
 validations: npm express-validator package
 
-## description
-
-### Sign up 
-
-- Does the user with the email already exists? If yes, respond with error.
-- Hash the password the user entered. Can't store it in the DB in plain text.
-- Create new User and save to Mongo DB 
-- User is now considered to be logged in. Send them Cookie, JWT token...
 
 ### /api/users/sigout
 
@@ -56,3 +48,33 @@ purpose: Sign out
 method: GET
 body: -
 purpose: Return info about the user
+## description
+
+### Sign up 
+
+- Does the user with the email already exists? If yes, respond with error.
+- Hash the password the user entered. Can't store it in the DB in plain text.
+- Create new User and save to Mongo DB 
+- User is now considered to be logged in. Send them JWT token in Cookie
+
+### Sign in
+
+- Does the user with the email already exists? If not, respond with error.
+- Compare the provided password with stored password
+- If passwords are the same, User is now considered to be logged in 
+- Send a JWT token in a cookie
+
+### Current user
+
+- Does this user have JWT token inside session cookie  set? If not or JWT is invalid, respond with error.
+- Return user data stored inside JWT token payload
+
+### Authentication strategy
+
+- Other services have logic to inspect is the user authenticated (cookie, JWT token ...)
+- if the user is invalidated, Auth service will send event to Event Bus 
+- We are using Next js, (server side rendering), it means we store JWT token inside cookie
+
+### Middlewares
+- Middleware to extract JWT payload and set in on 'req.currentUser'
+- Middleware to reject the request if the user is not logged in
