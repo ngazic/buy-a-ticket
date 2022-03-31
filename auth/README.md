@@ -78,3 +78,15 @@ purpose: Return info about the user
 ### Middlewares
 - Middleware to extract JWT payload and set in on 'req.currentUser'
 - Middleware to reject the request if the user is not logged in
+
+## Tests
+
+### Prerequisites
+```
+npm i
+```
+### Run tests
+
+```
+npm run test
+```

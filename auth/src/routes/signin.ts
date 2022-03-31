@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { BadRequestError } from '../errors/bad-request-error';
@@ -22,13 +22,13 @@ router.post(
       .withMessage('Password must have at least 5 chars')
   ],
   validateRequestMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
 
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
 
     if (!existingUser) {
-      throw new BadRequestError('Invalid credentials');
+      return next(new BadRequestError('Invalid credentials'));
     }
 
     const passwordsMatch = await Password.compare(
@@ -36,7 +36,7 @@ router.post(
       password
     );
     if (!passwordsMatch) {
-      throw new BadRequestError('Invalid Credentials');
+      return next(new BadRequestError('Invalid Credentials'));
     }
 
     // Generate JWT

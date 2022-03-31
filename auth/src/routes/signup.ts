@@ -25,7 +25,7 @@ router.post(
     }
 
     const user = User.build({ email, password });
-    user.save();
+    await user.save();
 
     // Generate JWT token
     const userJwt = jwt.sign(
