@@ -9,6 +9,10 @@
 - Ingress-nginx controller (as load balancer service)
 - skaffold
 
+### Libraries/ Shared Code: 
+
+Shared code is just another [git project](https://github.com/ngazic/buy-a-ticket-common-submodule) which is added as git submodule and published as NPM public **@ngazicticketingapp/common* [Linke here](https://www.npmjs.com/settings/ngazicticketingapp/packages)
+
 ### Change localhost to custom host ticketing.dev
 Set your local routing to custom ticketing.dev (this is ingress requirement).
    The host file is on the path "C:\Windows\System32\drivers\etc" (Windows)

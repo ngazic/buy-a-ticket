@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { currentUserMiddleware } from '../middlewares/current-user';
+import { currentUserMiddleware } from '@ngazicticketingapp/common';
 
 const router = express.Router();
 
