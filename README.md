@@ -106,3 +106,16 @@ kubectl create secret generic jwt-secret --from-literal=JWT_KEY=jwt_signature_va
 kubectl get secrets
 ```
 
+## Appendix 
+
+### Steps to develop microservice with Kubernetes and skaffold
+
+1. Create package.json, install deps
+2. Write Dockerfile
+3. Create index.ts to run project
+4. Build image, push to docker hub
+5. Write k8s file for deployment, service
+6. Update skaffold.yaml to do file sync for the service
+7. Write k8s file for MongoDB Deployment and service
+  
+**Note: do the final push of all images to docker hub for each service after the development is done!!!**

@@ -7,7 +7,7 @@ const start = async () => {
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY environment variable is not defined');
   }
-
+  
   if (!process.env.MONGO_URI) {
     throw new Error('MONGO_URI environment variable is not defined');
   }
@@ -20,7 +20,7 @@ const start = async () => {
   }
 
   app.listen(port, () => {
-    console.log(`Auth service listening on port ${port}!!`);
+    console.log(`Ticketing service listening on port ${port}!!`);
   });
 };
 

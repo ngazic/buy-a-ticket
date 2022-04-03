@@ -8,8 +8,16 @@ build:
   local:
     push: false
   artifacts:
-    - image: gaza/auth
+    - image: ngazic/auth
       context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "app/src/**/*.ts"
+            dest: .
+    - image: ngazic/tickets
+      context: tickets
       docker:
         dockerfile: Dockerfile
       sync:

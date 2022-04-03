@@ -1,6 +1,6 @@
 # Auth Service
 
-## Initial Setup
+## Initial Setup (for creating project from scratch only)
 
 1. Install dependencies:
 
@@ -20,6 +20,18 @@ npm i express
    ```
    npx tsc --init
    ```
+4. Create docker file
+5. Push docker image to docker hub 
+
+```
+# docker build -t user/image_name .
+docker build -t gaza/auth .
+#docker push user/image_name # for pushing image to docker hub
+docker push gaza/auth # for pushing image to docker hub
+```
+6. Register service to load balancer (Ingress)
+7. Update skaffold.yaml to do file sync for the service
+8. Start/Restart skaffold dev
 
 ## Routes
 
@@ -82,10 +94,8 @@ purpose: Return info about the user
 ## Tests
 
 ### Prerequisites
-```
-npm i
-```
-### Run tests
+
+Run tests
 
 ```
 npm run test
