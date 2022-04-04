@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express';
 import { json } from 'body-parser';
-import { errorHandlerMiddleware , NotFoundError} from '@ngazicticketingapp/common';
+import { currentUserMiddleware, errorHandlerMiddleware, NotFoundError } from '@ngazicticketingapp/common';
 import 'express-async-errors';
 import cookieSession from 'cookie-session';
+import { newTicketRouter } from './routes/new';
 
 const app = express();
 
@@ -16,6 +17,10 @@ app.use(cookieSession({
   // set cookies in http requests too
   secure: process.env.NODE_ENV !== 'test'
 }));
+
+app.use(currentUserMiddleware)
+
+app.use(newTicketRouter);
 
 
 app.use('*', async (req: Request, res: Response) => {

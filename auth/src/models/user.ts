@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Password } from '../services/password';
 
-// interface that describes the properties 
+// interface that describes the attributes 
 // for creating a new User 
 interface UserAttrs {
   email: string;
@@ -22,16 +22,28 @@ interface UserModel extends mongoose.Model<UserDoc> {
   build(attrs: UserAttrs): UserDoc;
 }
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true
+    },
+    password: {
+      type: String,
+      required: true
+    }
   },
-  password: {
-    type: String,
-    required: true
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        delete ret.__v;
+      }
+    }
   }
-});
+);
 
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
