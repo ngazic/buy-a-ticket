@@ -4,6 +4,7 @@ import { currentUserMiddleware, errorHandlerMiddleware, NotFoundError } from '@n
 import 'express-async-errors';
 import cookieSession from 'cookie-session';
 import { newTicketRouter } from './routes/new';
+import { showTicketRouter } from './routes/show';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(cookieSession({
 app.use(currentUserMiddleware)
 
 app.use(newTicketRouter);
+app.use(showTicketRouter);
 
 
 app.use('*', async (req: Request, res: Response) => {
