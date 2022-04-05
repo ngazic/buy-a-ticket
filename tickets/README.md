@@ -54,7 +54,7 @@ method: POST
 body: {title: string, price: string}
 purpose: Create a ticket
 
-### /api/tickets
+### /api/tickets/:id
 
 method: PUT
 body: {title: string, price: string}
