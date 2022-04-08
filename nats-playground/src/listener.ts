@@ -1,11 +1,12 @@
-import nats, { Message } from 'node-nats-streaming';
+import nats, { Message, Stan, SubscriptionOptions } from 'node-nats-streaming';
 import { randomBytes } from 'crypto';
+import { TicketCreatedListener } from './events/ticket-crated-listener';
 
 console.clear();
 
 const clientID = 'nihad-listener' + randomBytes(4).toString('hex');
 
-const stan = nats.connect('ticketing', clientID , {
+const stan = nats.connect('ticketing', clientID, {
   url: 'http://localhost:4222',
 });
 
@@ -19,28 +20,12 @@ stan.on('connect', () => {
 
 
   // NATS specificity - We need to chain options
-  const options = stan
-    .subscriptionOptions()
-    .setManualAckMode(true)
-    .setDeliverAllAvailable()
-    .setDurableName('accounting-service');
+  new TicketCreatedListener(stan).listen();
 
-  const subscription = stan.subscribe(
-    'ticket:created',
-    'queue-group-name',
-    options
-  );
 
-  subscription.on('message', (msg: Message) => {
-    const data = msg.getData();
-
-    if (typeof data === 'string') {
-      console.log(`Received event #${msg.getSequence()}, with data: ${data}`);
-    }
-
-    msg.ack();
-  });
 });
 
 process.on('SIGINT', () => stan.close());
 process.on('SIGTERM', () => stan.close());
+
+
