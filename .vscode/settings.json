@@ -1,6 +1,11 @@
 {
   "cSpell.words": [
+    "depl",
+    "kubernetes",
     "ngazicticketingapp",
     "signup"
-  ]
+  ],
+  "yaml.schemas": {
+    "kubernetes://schema/apps/v1%40deployment": "file:///d%3A/PROJECTS/other%20projects/buy-a-ticket/infra/k8s/tickets-depl.yaml"
+  }
 }

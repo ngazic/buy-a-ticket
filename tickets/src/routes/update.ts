@@ -1,7 +1,9 @@
 import { NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from '@ngazicticketingapp/common';
 import express, { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
+import { TicketCreatedPublisher } from '../events/publishers/ticket-created-publisher';
 import { Ticket } from '../models/ticket';
+import { natsWrapper } from '../nats-wrapper';
 
 
 const router = express.Router();
@@ -34,6 +36,15 @@ router.put(
     });
 
     await ticket.save();
+
+    new TicketCreatedPublisher(natsWrapper.client).publish(
+      {
+        id: ticket.id,
+        title: ticket.title,
+        price: ticket.price,
+        userId: ticket.userId,
+      }
+    );
 
     res.send(ticket);
   });
