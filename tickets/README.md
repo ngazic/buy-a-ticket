@@ -33,6 +33,13 @@ docker push gaza/tickets # for pushing image to docker hub
 7. Update skaffold.yaml to do file sync for the service 
 8. Start/Restart skaffold dev
 
+## Events
+
+### Publishes
+
+- Ticket:Created => emits this event to NATS when the new ticket is created
+- Ticket:Updated => emits this event to NATS when the new ticket is updated
+
 ## Routes
 
 ### /api/tickets
