@@ -1,19 +1,22 @@
+import { OrderStatus } from '@ngazicticketingapp/common';
 import mongoose from 'mongoose';
+import { Order } from './order';
+
+export { OrderStatus };
 
 // interface that describes the attributes
 // for creating a new ticket
 interface TicketAttrs {
   title: string;
   price: number;
-  userId: string;
 }
 
 // An interface that describes the properties
 // that a Ticket Document has
-interface TicketDoc extends mongoose.Document {
+export interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
-  userId: string;
+  isReserved(): Promise<boolean>;
 }
 
 //interface that describes the properties that
@@ -32,11 +35,8 @@ const ticketSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+      min: 0,
     },
-    userId: {
-      type: String,
-      required: true,
-    }
   },
   {
     toJSON: {
@@ -50,6 +50,21 @@ const ticketSchema = new mongoose.Schema(
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket(attrs);
+};
+
+ticketSchema.methods.isReserved = async function () {
+  const existingOrder = await Order.findOne({
+    ticket: this as any,
+    status: {
+      $in: [
+        OrderStatus.Created,
+        OrderStatus.AwaitingPayment,
+        OrderStatus.Complete
+      ]
+    }
+  });
+
+  return !!existingOrder;
 };
 
 const Ticket = mongoose.model<TicketDoc, TicketModel>('Ticket', ticketSchema);

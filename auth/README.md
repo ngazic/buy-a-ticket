@@ -25,9 +25,9 @@ npm i express
 
 ```
 # docker build -t user/image_name .
-docker build -t gaza/auth .
+docker build -t ngazic/auth .
 #docker push user/image_name # for pushing image to docker hub
-docker push gaza/auth # for pushing image to docker hub
+docker push ngazic/auth # for pushing image to docker hub
 ```
 6. Register service to load balancer (Ingress)
 7. Update skaffold.yaml to do file sync for the service
