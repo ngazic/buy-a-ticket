@@ -1,7 +1,8 @@
-import { NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from '@ngazicticketingapp/common';
+import { BadRequestError, NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from '@ngazicticketingapp/common';
 import express, { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { TicketCreatedPublisher } from '../events/publishers/ticket-created-publisher';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
 import { Ticket } from '../models/ticket';
 import { natsWrapper } from '../nats-wrapper';
 
@@ -26,6 +27,10 @@ router.put(
     if (!ticket) {
       return next(new NotFoundError());
     }
+    // Disable editing of the reserved ticket
+    if (ticket.orderId) {
+      return next(new BadRequestError('Cannot edit a reserved ticket'));
+    }
 
     if (req.currentUser!.id !== ticket.userId) {
       return next(new NotAuthorizedError());
@@ -37,12 +42,13 @@ router.put(
 
     await ticket.save();
 
-    new TicketCreatedPublisher(natsWrapper.client).publish(
+    new TicketUpdatedPublisher(natsWrapper.client).publish(
       {
         id: ticket.id,
         title: ticket.title,
         price: ticket.price,
         userId: ticket.userId,
+        version: ticket.version,
       }
     );
 
