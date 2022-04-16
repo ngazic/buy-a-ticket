@@ -1,7 +1,7 @@
 {
   "name": "auth",
   "version": "1.0.0",
-  "description": "method: POST\r body: {email:string, password:string}\r purpose: Sign up for account",
+  "description": "Service responsible for handling users",
   "main": "index.js",
   "jest": {
     "preset": "ts-jest",

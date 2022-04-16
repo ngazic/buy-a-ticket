@@ -32,3 +32,11 @@ build:
         manual:
           - src: "app/src/**/*.ts"
             dest: .
+    - image: ngazic/expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "app/src/**/*.ts"
+            dest: .
