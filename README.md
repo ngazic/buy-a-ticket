@@ -107,6 +107,10 @@ kubectl create secret generic jwt-secret --from-literal=JWT_KEY=jwt_signature_va
 kubectl get secrets
 ```
 
+## CI/CD
+
+This is example of CI/CD 
+
 ## Appendix 
 
 ### Steps to develop microservice with Kubernetes and skaffold
@@ -118,5 +122,15 @@ kubectl get secrets
 5. Write k8s file for deployment, service
 6. Update skaffold.yaml to do file sync for the service
 7. Write k8s file for MongoDB Deployment and service
+
+### Switching between Kubernetes local and production (i.e. Digital Ocean ) cluster
+
+```
+kubectl config view
+### Choose your config
+kubectl config use-context <context name>
+```
+
+CI is done by Github actions for each microservice selectively,and for Infra folder. Also, test are run on creating pull request as well.
   
 **Note: do the final push of all images to docker hub for each service after the development is done!!!**
