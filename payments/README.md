@@ -1,4 +1,4 @@
-# Expiration Service
+# Payments Service
 
 ## Initial Setup (for creating project from scratch only)
 
@@ -25,9 +25,9 @@ npm i express
 
 ```
 # docker build -t user/image_name .
-docker build -t ngazic/expiration .
+docker build -t ngazic/payments .
 #docker push user/image_name # for pushing image to docker hub
-docker push ngazic/expiration # for pushing image to docker hub
+docker push ngazic/payments # for pushing image to docker hub
 ```
 6. Register service to load balancer (Ingress)
 7. Update skaffold.yaml to do file sync for the service 
@@ -37,17 +37,24 @@ docker push ngazic/expiration # for pushing image to docker hub
 
 ### Publishes
 
-- Expiration:Completed => emits this event to NATS when the predefined time has elapsed
-  
+-  Payment:Created => emits this event to NATS when the new payment is created
+
 ### Listens
+
 - Order:Created
+- Order:Cancelled
 
 ## Routes
+
+### /api/payments
+
+method: POST
+body: {token: string, orderId: string}
+purpose: Create a payment
 
 
 ## description
 
-Expiration Service is used to emit event vie NATS when expiration time (i.e. 15 min ) has elapsed. It relies on the Bull JS npm module and Redis container as the messaging service.
 
 ## Tests
 

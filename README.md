@@ -19,12 +19,13 @@ Set your local routing to custom ticketing.dev (this is ingress requirement).
 
 ### In Chrome type: **thisisunsafe** (to use http)
 
-## Dev
+## Dev / Production Prerequisites
 
 Inside root directory, run:
 
 ```
 kubectl create secret generic jwt-secret --from-literal=JWT_KEY=somesecretpasswordinkubernetes # to create secret JWT token signature in Kubernetes
+kubectl create secret generic stripe-secret --from-literal=STRIPE_KEY=somesecretpasswordinkubernetes # to create secret Stripe token in Kubernetes, e.i. use "sk_test_51Kog8zFJPhsaxAKzeAakeguFNkjydu6iu2ReGl4JcSG5dZn1Z5Fzgu3AQ2VVBbxgSG5DChCuePiNrQr5pWQJqVMb00Pfb2DsiT" which is test implementation
 kubectl get secrets # to check all the secrets
 skaffold dev
 ```
